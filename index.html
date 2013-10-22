@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html ng-app="gaisberg">
     <head>
         <meta charset='utf-8' />
         <title>Todo list: gaisberg</title>
@@ -24,6 +24,29 @@
                 <p id='summary'>Loading...</p>
             </article>
 
+            <article ng-controller="todoCtrl">
+                <header>
+                    <h2>Windows Azure</h2>
+                    <h1>Mobile Services</h1>
+
+                    <form id='ng-add-item' ng-submit="addTodo()">
+                        <button type='submit'>Add</button>
+                        <div><input type='text' id='ng-new-item-text' placeholder='Enter new task' ng-model="newTodo" /></div>
+                    </form>
+                </header>
+
+                <ul id='ng-todo-items'>
+                    <li ng-repeat="todo in todos">
+                        <button class="item-delete" ng-click="deleteTodo()">Delete</button>
+                        <input type="checkbox" class="item-complete" ng-model="todo.complete">
+                        <div>
+                            <input class="item-text" ng-model="todo.text">
+                        </div>
+                    </li>
+                </ul>
+                <p id='ng-summary'>Loading...</p>
+            </article>
+
             <footer>
                 <a href='http://www.windowsazure.com/en-us/develop/mobile/'>
                     Learn more about Windows Azure Mobile Services
@@ -32,8 +55,10 @@
             </footer>
         </div>
 
-        <script src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js'></script>
-        <script src='https://gaisberg.azure-mobile.net/client/MobileServices.Web-1.0.0.min.js'></script>
+        <script src='//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js'></script>
+        <script src='//gaisberg.azure-mobile.net/client/MobileServices.Web-1.0.0.min.js'></script>
+        <script src='//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js'></script>
         <script src='page.js'></script>
+        <script src='app.js'></script>
     </body>
 </html>
