@@ -11,17 +11,24 @@
                 });
             });
             return deferred.promise;
+        },
+        addTodo: function (text) {
+            todoItemTable.insert({ text: text, complete: false });
+        },
+        deleteTodo: function (todo) {
+            todoItemTable.del({ id: todo.id })
         }
     };
 }).controller('todoCtrl', function ($scope, todoSrvc) {
     var todoPromise = todoSrvc.currentTodos();
     $scope.addTodo = function () {
-        alert('Add Todo');
+        todoSrvc.addTodo($scope.text);
+        $scope.text = '';
     };
-    $scope.deleteTodo = function () {
-        alert('Delete Todo');
+    $scope.deleteTodo = function (todo) {
+        todoSrvc.deleteTodo(todo);
     };
-    $scope.newTodo = '';
+    $scope.text = '';
     $scope.loading = true;
     $scope.todos = todoPromise;
     todoPromise.then(function () {

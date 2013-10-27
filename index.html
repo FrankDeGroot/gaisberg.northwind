@@ -31,13 +31,13 @@
 
                 <form id='ng-add-item' ng-submit="addTodo()">
                     <button type='submit'>Add</button>
-                    <div><input type='text' id='ng-new-item-text' placeholder='Enter new task' ng-model="newTodo" /></div>
+                    <div><input type='text' id='ng-new-item-text' placeholder='Enter new task' ng-model="text" /></div>
                 </form>
             </header>
 
             <ul id='ng-todo-items'>
                 <li ng-repeat="todo in todos">
-                    <button class="item-delete" ng-click="deleteTodo()">Delete</button>
+                    <button class="item-delete" ng-click="deleteTodo(todo)">Delete</button>
                     <input type="checkbox" class="item-complete" ng-model="todo.complete">
                     <div>
                         <input class="item-text" ng-model="todo.text">
