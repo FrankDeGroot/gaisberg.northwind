@@ -13,5 +13,5 @@ if (-not (Test-Path $iisExpress)) {
 $scriptDir = (Split-Path -Parent $MyInvocation.MyCommand.Definition)
 $wwwRoot = (Resolve-Path $scriptDir\..).Path
 Push-Location -Path (Split-Path -Parent $iisExpress)
-cmd /c iisexpress.exe /port:8000 /path:$wwwRoot
+cmd /c iisexpress.exe /port:80 /path:$wwwRoot
 Pop-Location

@@ -1,26 +1,40 @@
 ﻿angular.module('gaisberg', []).service('todoSrvc', function ($rootScope, $q) {
-    var client = new WindowsAzure.MobileServiceClient('https://gaisberg.azure-mobile.net/', 'zWkZwDXaswoZZUHPHUMQqoNdCeHuad42'),
+    var self = this,
+        client = new WindowsAzure.MobileServiceClient('https://gaisberg.azure-mobile.net/', 'zWkZwDXaswoZZUHPHUMQqoNdCeHuad42'),
         todoItemTable = client.getTable('todoitem'),
-        deferred = $q.defer();
-    return {
-        currentTodos: function () {
-            var query = todoItemTable.where({ complete: false });
-            query.read().then(function (todos) {
-                $rootScope.$apply(function () {
-                    deferred.resolve(todos);
-                });
+        query = todoItemTable.where({ complete: false });
+    this.errorlog = [];
+    this.todos = [];
+    this.loading = false;
+    this.readTodos = function () {
+        self.loading = true;
+        query.read().then(function (todos) {
+            $rootScope.$apply(function () {
+                self.todos.splice(0, self.todos.length);
+                todos.forEach(function (todo) { self.todos.push(todo); });
+                self.loading = false;
             });
-            return deferred.promise;
-        },
-        addTodo: function (text) {
-            todoItemTable.insert({ text: text, complete: false });
-        },
-        deleteTodo: function (todo) {
-            todoItemTable.del({ id: todo.id })
-        }
+        });
+    };
+    this.addTodo = function (text) {
+        todoItemTable.insert({ text: text, complete: false }).then(self.readTodos, self.appendErrorLog);
+    };
+    this.deleteTodo = function (todo) {
+        todoItemTable.del({ id: todo.id }).then(self.readTodos, self.appendErrorLog);
+    };
+    this.updateTodo = function (todo) {
+        todoItemTable.update({ id: todo.id, text: todo.text });
+    };
+    this.completeTodo = function (todo) {
+        todoItemTable.update({ id: todo.id, complete: todo.complete }).then(self.readTodos, self.appendErrorLog);
+    };
+    this.appendErrorLog = function (entry) {
+        $rootScope.$apply(function () {
+            self.errorlog.push(entry);
+            self.loading = false;
+        });
     };
 }).controller('todoCtrl', function ($scope, todoSrvc) {
-    var todoPromise = todoSrvc.currentTodos();
     $scope.addTodo = function () {
         todoSrvc.addTodo($scope.text);
         $scope.text = '';
@@ -28,10 +42,23 @@
     $scope.deleteTodo = function (todo) {
         todoSrvc.deleteTodo(todo);
     };
+    $scope.updateTodo = function (todo) {
+        todoSrvc.updateTodo(todo);
+    };
+    $scope.completeTodo = function (todo) {
+        todoSrvc.completeTodo(todo);
+    };
     $scope.text = '';
     $scope.loading = true;
-    $scope.todos = todoPromise;
-    todoPromise.then(function () {
-        $scope.loading = false;
-    });
+    $scope.$watch(
+        function () {
+            return todoSrvc.loading;
+        },
+        function (newVal) {
+            $scope.loading = newVal;
+        }
+    );
+    $scope.todos = todoSrvc.todos;
+    $scope.errorlog = todoSrvc.errorlog;
+    todoSrvc.readTodos();
 });
