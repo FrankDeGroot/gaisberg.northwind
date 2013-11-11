@@ -45,7 +45,6 @@
     <Content Include=".gitignore" />
     <Content Include="app.js" />
     <Content Include="index.html" />
-    <Content Include="page.js" />
     <Content Include="server\launch-linux.sh" />
     <Content Include="server\launch-mac.command" />
     <Content Include="server\launch-windows.lnk" />
