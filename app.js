@@ -39,15 +39,9 @@
         todoSrvc.addTodo($scope.text);
         $scope.text = '';
     };
-    $scope.deleteTodo = function (todo) {
-        todoSrvc.deleteTodo(todo);
-    };
-    $scope.updateTodo = function (todo) {
-        todoSrvc.updateTodo(todo);
-    };
-    $scope.completeTodo = function (todo) {
-        todoSrvc.completeTodo(todo);
-    };
+    $scope.deleteTodo = todoSrvc.deleteTodo;
+    $scope.updateTodo = todoSrvc.updateTodo;
+    $scope.completeTodo = todoSrvc.completeTodo;
     $scope.text = '';
     $scope.loading = true;
     $scope.$watch(
